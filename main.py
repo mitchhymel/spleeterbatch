@@ -1,18 +1,20 @@
 from spleeter import *
 from spleeter.separator import Separator
-from spleeter.utils import *
-from spleeter.audio.adapter import get_default_audio_adapter
 
-import json
-with open('./input.json') as f:
-    data = json.load(f)
-    outputDir = data['outputDir']
-    inputFiles = data['inputFiles']
+
+bitrate='320k'
+outputDir = "./output"
+inputFiles = []
+backend='librosa'
+config='spleeter:2stems-16kHz'
+with open('./input.txt') as f:
+    for line in f:
+        inputFiles.append(line)
 
 def doSeparate(separator, files, output):
     for file in files:
-        separator.separate_to_file(audio_descriptor=file, destination=output, bitrate='320k')
+        separator.separate_to_file(audio_descriptor=file, destination=output, bitrate=bitrate)
 
-separator = Separator('spleeter:2stems-16kHz', stft_backend='librosa', multiprocess=False)
+separator = Separator(config, stft_backend=backend, multiprocess=False)
 doSeparate(separator, inputFiles, outputDir)
 
